@@ -353,3 +353,123 @@ INSERT INTO	stu2 VALUES (1, "guardwhy", "男","1993-6-19"), (2, "邓肯", "男",
 truncate stu2;
 ```
 
+### 5-DCL:数据库控制语言
+
+#### 5.1-创建用户
+
+**语法**：
+
+```properties
+create user '用户名'@'主机名' identified by '密码';
+主机名:a.如果是本地用户用localhost,如果想让该用户可以从任意远程主机登陆，可以使用通配符%。
+```
+
+**案列语句**
+
+```mysql
+用户1：create user 'guardwhy1' @'localhost' identified by '123';
+用户2：create user 'guardwhy2' @'%' identified by '123';
+```
+
+#### 5.2-给用户授权
+
+**语法**：
+
+```properties
+grant 权限 on 数据库名.表名 to '用户名'@'主机名'
+```
+
+**权限**：
+
+```properties
+授予用户的权限，如 CREATE、ALTER、SELECT、INSERT、UPDATE、DELETE等，如果要授予所有的权限则使用ALL。
+```
+
+**案例语句**
+
+1、给 guardwhy1用户分配对 stu1这个数据库操作的权限：创建表，修改表，插入记录，更新记录。
+
+```mysql
+grant create, alter, insert, update, select on stu1.* to 'guardwhy1'@'localhost';
+```
+
+2、给guardwhy2用户分配所有权限，对所有数据库的所有表 。
+
+```mysql
+grant all on *.* to 'guardwhy2'@'%';
+```
+
+#### 5.3-撤销授权
+
+**语法**
+
+```properties
+revoke 权限 on 数据库名.表名 from '用户名'@'主机名'
+```
+
+**权限**：
+
+```properties
+授予用户的权限，如 CREATE、ALTER、SELECT、INSERT、UPDATE、DELETE等，如果要授予所有的权限则使用ALL。
+给哪个用户撤销，要加上单引号。与创建用户时的用户名和主机名要相同。
+```
+
+**案例语句**
+
+撤销 guardwhy1 用户对 stu1数据库所有表的操作的权限。
+
+```mysql
+revoke all on stu1.*from 'guardwhy1'@'localhost'
+```
+
+#### 5.4-删改操作
+
+##### 5.4.1-删除用户
+
+**语法**：
+
+```properties
+drop user '用户名'@'主机名'
+```
+
+**案例语句**：
+
+```mysql
+drop user 'guardwhy2'@'%';
+```
+
+##### 5.4.2-修改管理员密码
+
+**语法：**
+
+```properties
+mysqladmin -u 用户名 -p password 新密码
+```
+
+**案例语句**：
+
+```mysql
+mysqladmin -u root -p password 123
+```
+
+##### 5.4.3-修改用户自己的密码
+
+**语法**
+
+```properties
+set password = password('密码');
+```
+
+**案例语句**
+
+1、以guardwhy1用户登陆。
+
+2、修改guardwhy1的密码为abcd
+
+3、重新以新的密码登陆。
+
+```mysql
+set password = password('abcd');
+mysql -u guardwhy1 -p abcd
+```
+
